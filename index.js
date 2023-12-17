@@ -13,6 +13,8 @@ const secretKey = crypto.randomBytes(32).toString('hex');
 const app = express()
 const port = 8000
 
+app.set('baseUrl', 'https://www.doc.gold.ac.uk/usr/365');
+
 app.use(session({
     secret: secretKey,
     resave: true,

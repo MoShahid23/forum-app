@@ -1,5 +1,4 @@
 const session = require("express-session");
-const baseUrl = 'https://www.doc.gold.ac.uk/usr/365';
 
 module.exports = function(app, renderData) {
     const isAuthenticated = (req, res, next) => {
@@ -10,7 +9,7 @@ module.exports = function(app, renderData) {
         }else{
             // User is not authenticated, redirect to login page
             console.log("not success")
-            res.redirect(baseurl+'/login');
+            res.redirect(req.app.get('baseUrl')+'/login');
         }
     };
 
@@ -65,7 +64,7 @@ module.exports = function(app, renderData) {
     app.get('/login', function(req,res){
         if(req.session && req.session.userId) {
             // User is authenticated
-            res.redirect(baseurl+'/')
+            res.redirect(req.app.get('baseUrl')+'/')
         }else{
             // User is not authenticated, redirect to login page
             let errorMessage = '';
@@ -94,17 +93,17 @@ module.exports = function(app, renderData) {
         db.query(query, [email, email, password], (err, results) => {
             if(err){
                 console.error("error logging in", err)
-                res.redirect(baseurl+'/login?error=2');
+                res.redirect(req.app.get('baseUrl')+'/login?error=2');
             }
             else if(results.length == 1){
                 // Set up the session
                 req.session.userId = results[0].id;
                 req.session.userEmail = results[0].email;
                 req.session.username = results[0].username;
-                res.redirect(baseurl+'/');
+                res.redirect(req.app.get('baseUrl')+'/');
             }else{
                 // User not found or password incorrect
-                res.redirect(baseurl+'/login?error=1');
+                res.redirect(req.app.get('baseUrl')+'/login?error=1');
             }
         });
     });
@@ -115,7 +114,7 @@ module.exports = function(app, renderData) {
               console.error('Error destroying session:', err);
             }
             // Redirect to the login page or any other desired page after logout
-            res.redirect(baseurl+'/login');
+            res.redirect(req.app.get('baseUrl')+'/login');
         });
     });
 
@@ -123,7 +122,7 @@ module.exports = function(app, renderData) {
     app.get('/register', function(req,res){
         if(req.session && req.session.userId) {
             // User is authenticated
-            res.redirect(baseurl+'/')
+            res.redirect(req.app.get('baseUrl')+'/')
         }else{
             // User is not authenticated, redirect to login page
             let errorMessage = '';
@@ -167,13 +166,13 @@ module.exports = function(app, renderData) {
             if(err){
                 console.error("error registering", err)
                 if(err.sqlMessage.includes("Duplicate entry") && err.sqlMessage.includes("users.email")){
-                    res.redirect(baseurl+'/register?error=2')
+                    res.redirect(req.app.get('baseUrl')+'/register?error=2')
                 }
                 else if(err.sqlMessage.includes("Duplicate entry") && err.sqlMessage.includes("users.username")){
-                    res.redirect(baseurl+'/register?error=3')
+                    res.redirect(req.app.get('baseUrl')+'/register?error=3')
                 }
                 else{
-                    res.redirect(baseurl+'/register?error=1');
+                    res.redirect(req.app.get('baseUrl')+'/register?error=1');
                 }
             }
             else{
@@ -181,7 +180,7 @@ module.exports = function(app, renderData) {
                 db.query(query2, (err, results) => {
                     if(err){
                         console.error("error registering", err)
-                        res.redirect(baseurl+'/register?error=1');
+                        res.redirect(req.app.get('baseUrl')+'/register?error=1');
                     }
                     else{
                         // Set up the session
@@ -405,7 +404,7 @@ module.exports = function(app, renderData) {
     });
 
     app.get('/create', isAuthenticated, function(req, res) {
-        res.redirect(baseurl+'/create/-')
+        res.redirect(req.app.get('baseUrl')+'/create/-')
     })
     app.get('/create/:topic', isAuthenticated, function(req, res) {
 
