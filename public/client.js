@@ -104,7 +104,7 @@ if(document.getElementsByTagName("form").length>1 && document.getElementsByTagNa
         followedTopics.push(topic.innerText.replaceAll("<", "").replaceAll(">", ""));
     }
 
-    let baseUrl = document.querySelector('.create-post').action.replace("/create/", "");
+    let baseUrl = document.querySelector('.create-post').action.replace("/post", "");
 
     document.addEventListener("input",  displayPostPreview(followedTopics, existingTopics, baseUrl));
     document.addEventListener("click",  displayPostPreview(followedTopics, existingTopics, baseUrl));
