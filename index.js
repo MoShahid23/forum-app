@@ -13,6 +13,26 @@ const secretKey = crypto.randomBytes(32).toString('hex');
 const app = express()
 const port = 8000
 
+app.set('baseUrl', 'https://www.doc.gold.ac.uk/usr/365/');
+const appendBaseUrl = (req, res, next) => {
+    const baseUrl = req.app.get('baseUrl');
+
+    // Override the redirect method to include the base URL
+    res.originalRedirect = res.redirect;
+    res.redirect = (status, url) => {
+        // Check if the URL is relative, and prepend the base URL if so
+        if (url && url.charAt(0) === '/') {
+        url = baseUrl + url;
+        }
+
+        // Call the original redirect method with the updated URL
+        res.originalRedirect(status, url);
+    };
+
+    next();
+};
+app.use(appendBaseUrl);
+
 app.use(session({
     secret: secretKey,
     resave: true,
