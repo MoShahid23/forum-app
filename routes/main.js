@@ -183,8 +183,7 @@ module.exports = function(app, renderData) {
                         res.redirect(req.app.get('baseUrl')+'/register?error=1');
                     }
                     else{
-                        // Set up the session
-                        res.redirect(req.app.get('baseUrl')+`/login?registered=true&password=${password}&email=${email}`);
+                        res.redirect(`${req.app.get('baseUrl')}/login?registered=true&password=${password}&email=${email}`);
                     }
                 });
             }
