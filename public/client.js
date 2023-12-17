@@ -28,7 +28,7 @@ if(document.getElementsByClassName("dropdown")[0]){
     })
 }
 
-let displayPostPreview = function(followed, existing){
+let displayPostPreview = function(followed, existing, baseUrl){
     let topic = document.getElementById("selectedTopic");
     let title = document.getElementById("selectedTitle");
     let body = document.getElementById("selectedBody");
@@ -72,17 +72,17 @@ let displayPostPreview = function(followed, existing){
     if(body.value!="" && topic.value!="" && title.value!=""){
         if(followed.includes(topic.value)){
             //yes can post
-            document.querySelector('.create-post').action = "/post/ok"
+            document.querySelector('.create-post').action = baseUrl+"/post/ok"
             document.getElementById("submitButton").innerText = "create post?"
         }
         else if(!followed.includes(topic.value) && existing.includes(topic.value)){
             //yes u cna post but need join first
-            document.querySelector('.create-post').action = "/post/join"
+            document.querySelector('.create-post').action = baseUrl+"/post/join"
             document.getElementById("submitButton").innerText = "join topic and create post?"
         }
         else{
             //it doe not exist yet but u can post after create
-            document.querySelector('.create-post').action = "/post/create"
+            document.querySelector('.create-post').action = baseUrl+"/post/create"
             document.getElementById("submitButton").innerText = "create topic and post?"
         }
         document.getElementById("submitButton").style.backgroundColor = "yellowgreen";
@@ -104,11 +104,13 @@ if(document.getElementsByTagName("form").length>1 && document.getElementsByTagNa
         followedTopics.push(topic.innerText.replaceAll("<", "").replaceAll(">", ""));
     }
 
-    document.addEventListener("input",  displayPostPreview(followedTopics, existingTopics));
-    document.addEventListener("click",  displayPostPreview(followedTopics, existingTopics));
+    let baseUrl = document.querySelector('.create-post').action.replace("/create/", "");
 
-    document.addEventListener("input", () => displayPostPreview(followedTopics, existingTopics));
-    document.addEventListener("click", () => displayPostPreview(followedTopics, existingTopics));
+    document.addEventListener("input",  displayPostPreview(followedTopics, existingTopics, baseUrl));
+    document.addEventListener("click",  displayPostPreview(followedTopics, existingTopics, baseUrl));
+
+    document.addEventListener("input", () => displayPostPreview(followedTopics, existingTopics, baseUrl));
+    document.addEventListener("click", () => displayPostPreview(followedTopics, existingTopics, baseUrl));
 
     document.getElementById("insert-sub").addEventListener("click", function(){
         let body = document.getElementById("selectedBody");
