@@ -114,12 +114,12 @@ if(document.getElementsByTagName("form").length>1 && document.getElementsByTagNa
 
     document.getElementById("insert-sub").addEventListener("click", function(){
         let body = document.getElementById("selectedBody");
-        body.value = body.value+"\n"+"<*h> type sub-heading here... <j*>"
+        body.value = body.value+'\n<*h> type sub-heading here... <h*>'
     });
 
     document.getElementById("insert-link").addEventListener("click", function(){
         let body = document.getElementById("selectedBody");
-        body.value = body.value+"\n"+"<*l link = 'insert link in here'> type link name here... <l*>"
+        body.value = body.value+'\n<*l link = "insert link in here"> type link name here... <l*>'
     });
 
     document.getElementById("submitButton").addEventListener("click", function(){
