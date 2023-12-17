@@ -542,7 +542,7 @@ module.exports = function(app, renderData) {
                                 res.status(404).render('404.ejs');
                             }
 
-                            res.redirect("/posts/"+postID[postID.length-1].id);
+                            res.redirect(req.app.get('baseUrl')+"/posts/"+postID[postID.length-1].id);
                         });
                     });
                 });
