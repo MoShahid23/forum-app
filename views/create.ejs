@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Create a post - <%=appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet"  type="text/css" href="/create.css" />
+    <link rel="stylesheet"  type="text/css" href="/posts.css" />
+  </head>
+  <body>
+
+    <header>
+      <h1><a href="/"><%=appName%></a></h1>
+
+      <form id="searchForm" method="POST" action="/search">
+        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+        <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
+      </form>
+
+      <div class="dropdown">
+        <button class="dropbtn">▼&nbsp; <%=sessionData.username%></button>
+        <div class="dropdown-content">
+          <a class="img-link" href="/profile"><img src="/images/profile_icon.webp">View Profile</a>
+          <a class="img-link" href="/logout"><img src="/images/logout_icon.png">Log Out</a>
+        </div>
+      </div>
+    </header>
+    <section>
+      <div id="spacer"></div>
+      <div id="main">
+        <form class="create-post" method="POST" action="/post">
+            <h2 class="nonpost">create a post</h2>
+            <div class="topic-input">
+                <label for="selectedTopic">Topic:<br>
+                    <% if (topic!="-") { %>
+                        <input list="topics" id="selectedTopic" autocomplete="off" placeholder="Select or create topic" value="<%= topic %>">
+                    <%  allTopics = allTopics.filter(item => item !== topic); %>
+                    <% } else{ %>
+                        <input list="topics" id="selectedTopic" autocomplete="off" placeholder="Select or create topic">
+                    <% } %>
+                </label>
+
+                <datalist id="topics">
+                <% for (let i = 0; i < allTopics.length; i++) { %>
+                    <option value="<%= allTopics[i].name %>">
+                <% } %>
+                </datalist>
+            </div>
+
+            <div class="title-input">
+                <label for="selectedTitle">Title:<br>
+                    <input id="selectedTitle" autocomplete="off" placeholder="Post title...">
+                </label>
+            </div>
+
+            <div class="body-input">
+                <label for="selectedBody">Text:<br>
+                    <button id="insert-sub" type="button">insert subheading</button>
+                    <button id="insert-link" type="button">insert link</button>
+                    <textarea id="selectedBody" autocomplete="off" placeholder="Post text..."></textarea>
+                </label>
+            </div>
+
+            <button type="button" id="submitButton">
+            create
+            </button>
+        </form>
+
+        <h2 class="nonpost">post preview</h2>
+        <div class="post">
+            <div class="post-metadata">
+              <span class="metadata-username">
+                <a class="img-link" href="/users/<%= sessionData.username %>">
+                  <img src="/images/profile_icon.webp">
+                  <%= sessionData.username %>
+                </a>
+              </span>
+              <a class="metadata-topic" href="/topics/">
+                &lt;Topic not selected&gt;
+              </a>
+              <span class="metadata-date">
+                Posted Today • <%= new Date(Date.now()).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(Date.now()).toLocaleString('en-GB', { timeStyle: 'short' }) %>
+              </span>
+            </div>
+            <div class="post-data">
+              <h2>Title not entered</h2>
+              <div class="paragraph">Post body text not entered</div>
+            </div>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <a class="page-link" href="/"><img src="/images/home_icon.png" alt="">Home</a>
+        <a class="page-link" href="/topics"><img src="/images/topics_icon.png" alt="">View Topics</a>
+        <a class="page-link" href="/users"><img src="/images/users_icon.png" alt="">View Users</a>
+        <a class="page-link" href="/about"><img src="/images/about_icon.png" alt="">About</a>
+
+        <% if (topicNamesList && topicNamesList.length > 0) { %>
+          <div class="followed-topics">
+            <h2>Followed:</h2>
+            <% for (let i = 0; i < topicNamesList.length; i++) { %>
+              <a class="followed-topic" href="/topics/<%= topicNamesList[i] %>">&lt;<%= topicNamesList[i]%>&gt;</a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </section>
+  </body>
+
+  <script src="/client.js"></script>
+</html>

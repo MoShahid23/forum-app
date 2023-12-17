@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Welcome to <%=appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet"  type="text/css" href="/posts.css" />
+  </head>
+  <body>
+    <%
+      function calculateDaysAgo(timestamp) {
+        const postDate = new Date(timestamp);
+        const currentDate = new Date();
+        const timeDifference = currentDate - postDate;
+        const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        if(daysAgo == 0){
+          return "Posted today"
+        }else if(daysAgo == 1){
+          return "Posted yesterday"
+        }
+        return "Posted "+daysAgo+" days ago";
+      }
+    %>
+
+    <header>
+      <h1><a href="/"><%=appName%></a></h1>
+
+      <form id="searchForm" method="POST" action="/search">
+        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+        <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
+      </form>
+
+      <div class="dropdown">
+        <button class="dropbtn">▼&nbsp; <%=sessionData.username%></button>
+        <div class="dropdown-content">
+          <a class="img-link" href="/profile"><img src="/images/profile_icon.webp">View Profile</a>
+          <a class="img-link" href="/logout"><img src="/images/logout_icon.png">Log Out</a>
+        </div>
+      </div>
+    </header>
+    <section>
+      <div id="spacer"></div>
+      <div id="main">
+        <% for (let i = 0; i < results.length; i++) { %>
+          <div class="post">
+            <div class="post-metadata">
+              <span class="metadata-username">
+                <a class="img-link" href="/users/<%= results[i].username %>">
+                  <img src="/images/profile_icon.webp">
+                  <%= results[i].username %>
+                </a>
+              </span>
+              <a class="metadata-topic" href="/topics/<%= results[i].topic_name %>">
+                &lt;<%= results[i].topic_name %>&gt;
+              </a>
+              <span class="metadata-date">
+                <%= calculateDaysAgo(results[i].timestamp) %> • <%= new Date(results[i].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(results[i].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
+              </span>
+            </div>
+            <div class="post-data">
+              <%- results[i].context %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+
+      <div id="sidebar">
+        <a class="page-link" href="/"><img src="/images/home_icon.png" alt="">Home</a>
+        <a class="page-link" href="/topics"><img src="/images/topics_icon.png" alt="">View Topics</a>
+        <a class="page-link" href="/users"><img src="/images/users_icon.png" alt="">View Users</a>
+        <a class="page-link" href="/about"><img src="/images/about_icon.png" alt="">About</a>
+
+        <% if (topicNamesList && topicNamesList.length > 0) { %>
+          <div class="followed-topics">
+            <h2>Followed:</h2>
+            <% for (let i = 0; i < topicNamesList.length; i++) { %>
+              <a class="followed-topic" href="/topics/<%= topicNamesList[i] %>">&lt;<%= topicNamesList[i]%>&gt;</a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </section>
+  </body>
+
+  <script src="/client.js"></script>
+</html>

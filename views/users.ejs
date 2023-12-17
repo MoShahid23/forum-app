@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Users - <%=appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet"  type="text/css" href="/topics.css" />
+  </head>
+  <body>
+
+    <header>
+      <h1><a href="/"><%=appName%></a></h1>
+
+      <form id="searchForm" method="POST" action="/search">
+        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+        <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
+      </form>
+
+      <div class="dropdown">
+        <button class="dropbtn">▼&nbsp; <%=sessionData.username%></button>
+        <div class="dropdown-content">
+          <a class="img-link" href="/profile"><img src="/images/profile_icon.webp">View Profile</a>
+          <a class="img-link" href="/logout"><img src="/images/logout_icon.png">Log Out</a>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div id="spacer"></div>
+
+      <div id="main">
+        <div class="topics">
+            <h2>Other users:</h2>
+        <% for (let i = 0; i < results.length; i++) { %>
+            <a class="topic" href="/users/<%= results[i].username %>">
+               <%= results[i].username %>
+            </a>
+        <% } %>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <a class="page-link" href="/"><img src="/images/home_icon.png" alt="">Home</a>
+        <a class="page-link" href="/topics"><img src="/images/topics_icon.png" alt="">View Topics</a>
+        <a class="page-link active" href="/users"><img src="/images/users_icon.png" alt="">View Users</a>
+        <a class="page-link" href="/about"><img src="/images/about_icon.png" alt="">About</a>
+
+        <% if (topicNamesList && topicNamesList.length > 0) { %>
+          <div class="followed-topics">
+            <h2>Followed:</h2>
+            <% for (let i = 0; i < topicNamesList.length; i++) { %>
+              <a class="followed-topic" href="/topics/<%= topicNamesList[i] %>">&lt;<%= topicNamesList[i]%>&gt;</a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </section>
+  </body>
+
+  <script src="/client.js"></script>
+</html>

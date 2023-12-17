@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Register - <%=appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet"  type="text/css" href="/authentication.css" />
+  </head>
+  <body>
+    <h1><a href="/"><%=appName%></a></h1>
+    <h2>Register</h2>
+    <% if (errorMessage != "") { %>
+      <p style="width: fit-content; text-align: center; font-size:20px; background-color: red;"><%= errorMessage %></p>
+    <% } %>
+    <div class="form-container">
+      <form method="POST" action="/attempt_register">
+        <p><span>First Name:</span><input id="lname-input" type="text" name="First" pattern="[a-zA-Z]+" required/></p>
+        <p><span>Last Name:</span><input id="fname-input" type="text" name="Last" pattern="[a-zA-Z]+" required/></p>
+        <p><span>Username:</span><input id="username-input" type="text" name="Username" pattern="[a-zA-Z0-9_]+" title="Only letters, numbers, and underscores are allowed" required/></p>
+        <p><span><img src="/images/mail_icon.png">Email:</span><input id="email-input" type="email" name="email" required/></p>
+        <p><span><img src="/images/lock_icon.png">Password:</span><input id="password-input" type="password" name="password" pattern=".{8,}" title="Password must be at least 4 character long" required/></p>
+        <input id="button" type="submit" value="register" />
+      </form>
+      <a href="/login">Already have an account? Login here.</a>
+    </div>
+  </body>
+
+  <script src="/client.js"></script>
+</html>

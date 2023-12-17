@@ -1,0 +1,30 @@
+.topic-header{
+    background-color: yellowgreen;
+    width: 80%;
+    text-align: left;
+    margin: 0 auto;
+    margin-bottom: 10px;
+
+    padding: 5px 10px;
+    border: 2px solid yellowgreen;
+    border-radius: 10px;
+    font-size: 25px;
+    color: black;
+    font-weight: bold;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.topic-subheading{
+    font-size: 22px;
+    background-color: yellowgreen;
+    width: max-content;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    margin-left: 5%;
+    margin-bottom: 10px;
+}

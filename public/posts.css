@@ -1,0 +1,19 @@
+#main .post .post-data .paragraph{
+    font-size: 18px;
+    text-align: left;
+    padding: 0 40px 0 40px;
+    max-height: fit-content;
+    max-width: 100%;
+    overflow: unset;
+    white-space: unset;
+    text-overflow: unset;
+}
+
+
+#main .post .post-data{
+    outline: unset;
+}
+
+#main .post .post-data:hover{
+    outline: unset;
+}

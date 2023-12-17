@@ -1,0 +1,141 @@
+.create-post{
+    display: block;
+    width: 90% !important;
+    margin: 0 auto !important;
+    background-color: rgb(33,33,33);
+    border: 2px solid yellowgreen;
+    border-radius: 10px;
+    padding: 20px 10px;
+    margin-bottom: 40px!important;
+}
+label{
+    display: inline-block;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: black;
+    color: yellowgreen;
+    border-radius: 10px;
+    margin: 10px 0;
+    text-align: left;
+
+}
+.create-post input{
+    margin-top: 10px;
+
+    border-radius: 10px !important;
+    background-color: rgb(33,33,33)!important;
+
+    transition: all 0.4s;
+}
+
+.create-post input:hover{
+    background-color: black!important;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -o-transition: all 0.4s;
+}
+
+.create-post input:focus{
+    background-color: black!important;
+    transition: all 0.4s;
+}
+
+.topic-input{
+    display: flex;
+}
+
+.topic-input #selectedTopic{
+    width: 200px !important;
+    margin-right: auto;
+}
+
+.title-input{
+    display: flex;
+}
+
+.title-input label{
+    width: 100%;
+}
+
+.title-input #selectedTitle{
+    width: 95% !important;
+    margin-right: auto;
+}
+
+.body-input label{
+    width: 98%;
+}
+
+.body-input #selectedBody{
+    width: 95% !important;
+    height: 270px;
+    max-width: 95%;
+    margin-right: auto;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    resize: none;
+    overflow: scroll;
+    background-color: rgb(33,33,33);
+    color: white;
+    border: 2px solid yellowgreen;
+    transition: all 0.4s;
+}
+.create-post textarea:hover{
+    background-color: black!important;
+    transition: all 0.4s;
+}
+.create-post textarea:focus{
+    background-color: black!important;
+    transition: all 0.4s;
+}
+
+.body-input button{
+    padding: 5px;
+    background-color: yellowgreen;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+    transition: all 0.4s;
+}
+.body-input button:hover{
+    transform: scale(1.1);
+    transition: all 0.4s;
+}
+.body-input button:focus{
+    transform: scale(1.2);
+    transition: all 0.4s;
+}
+
+#submitButton{
+    display: block;
+    font-size: 22px;
+    padding: 10px;
+    margin-left: auto;
+    background-color: yellowgreen;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.4s;
+}
+
+#submitButton:hover{
+    transform: scale(1.1);
+    transition: all 0.4s;
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+}
+
+#submitButton:focus{
+    transform: scale(1.3);
+    transition: all 0.4s;
+    -webkit-transform: scale(1.3);
+    -moz-transform: scale(1.3);
+    -ms-transform: scale(1.3);
+    -o-transform: scale(1.3);
+}

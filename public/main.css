@@ -1,0 +1,468 @@
+html{
+  height: 100vh;
+  background-color: black;
+  color: white;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 30px;
+  text-align: center;
+  transition: all 0.8s;
+}
+
+body{
+  height: 100%;
+  margin: 0;
+}
+
+header{
+  background-color:rgb(33, 33, 33);
+  display: flex;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+
+header h1{
+  font-size: 20px;
+  text-align: left;
+  margin-left: 20px;
+  width: fit-content;
+  padding: 10px;
+  border: 3px yellowgreen solid;
+  border-radius: 5px;
+}
+
+header h1 a{
+  color: yellowgreen;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: none;
+}
+
+header h1 a:hover{
+  text-decoration: none;
+}
+
+
+#searchForm{
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+}
+
+#searchForm input{
+  height: 20px;
+  width: 500px;
+  padding: 10px;
+  margin: auto;
+
+  font-size: 16px;
+  background-color: transparent;
+  color: white;
+  border: 3px solid yellowgreen;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  transition: all 0.4s;
+}
+
+#searchForm input:hover{
+  background-color: yellowgreen;
+  transition: all 0.4s;
+}
+
+#searchForm input:focus{
+  outline: none;
+  background-color: black;
+  transition: all 0.4s;
+}
+
+
+#searchForm button{
+  width: auto;
+  height: 46px;
+  margin: auto;
+  font-size: 16px;
+  background-color: yellowgreen;
+  color: white;
+  border: 3px solid yellowgreen;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: none;
+}
+
+#searchForm button img{
+  width: 35px;
+  transition: all 0.4s;
+}
+
+#searchForm button img:hover{
+  width: 30px;
+  transition: all 0.4s;
+}
+
+header .dropdown{
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 20px;
+  position: relative;
+  min-width: 160px;
+  width: fit-content;
+  transition: all 0.4s;
+}
+
+
+/* Dropdown Button */
+.dropbtn {
+  margin: 15px 0;
+  padding: 10px;
+
+  min-width: 160px;
+  width: fit-content;
+  color: white;
+  background-color: transparent;
+  font-size: 16px;
+  border: solid 3px yellowgreen;
+  border-radius: 5px;
+  transition: all 0.4s;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: fixed;
+  width: 160px;
+
+  border: black solid 2px;
+  background-color: yellowgreen;
+  opacity: 0;
+
+  z-index: 1;
+  transition: all 1s;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  display: block;
+  padding: 12px 0;
+
+  border-top: solid 1px black;
+
+  color: black;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown.active .dropdown-content {
+  opacity: 1;
+  display: block;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropbtn:hover {
+  transition: all 0.4s;
+  color: black;
+  background-color: rgba(153, 205, 50, 0.632);
+}
+
+a.img-link{
+  display: flex;
+  margin-left: auto;
+  width: inherit;
+}
+
+a.img-link img{
+  display: inline-block;
+  width: 20px;
+  align-self: start;
+  margin: 0 10px;
+}
+
+section{
+  display: grid;
+  width: 100%;
+  height: 100%;
+
+  grid-template-rows: min-content auto; /* Two rows with automatic height */
+  grid-template-columns: 75% 25%; /* Two equal-width columns */
+}
+
+#spacer{
+  grid-row: 1 / span 1; /* Span 1 row starting from row 1 */
+  grid-column: 1 / span 2; /* Span 2 columns starting from column 1 */
+  width: 100%;
+  height: 110px;
+}
+
+#main{
+  display: inline-block;
+  height: 100%;
+}
+
+#main h2.nonpost{
+  width: max-content;
+  background-color: yellowgreen;
+  color: black;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 0 auto;
+  font-size: 33px;
+  margin-bottom: 20px;
+}
+
+#main .create-post{
+  display: block;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+#main .create-post a{
+  width: 70%;
+  display: block;
+  margin-left: 5%;
+  padding: 10px;
+  text-decoration: none;
+  text-align: left;
+  border: 2px solid yellowgreen;
+  border-radius: 10px;
+  background-color: rgb(33, 33, 33);
+}
+
+#main .create-post a button{
+  display: inline-block;
+  width: 15%;
+  text-align: center;
+  background-color: yellowgreen;
+  font-size: 15px;
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#main .create-post input{
+  width: 60%;
+  background-color: black;
+  color: white;
+  outline: none;
+  border: 2px yellowgreen solid;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 5px;
+}
+
+#main .create-post select{
+  padding: 10px;
+  border: none;
+  outline: none;
+  background-color: yellowgreen;
+  margin-left: 5px;
+  border-radius: 5px;
+}
+
+#main .post{
+  display: block;
+  background-color: rgb(33,33,33);
+  border: yellowgreen 4px solid;
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  border-radius: 10px;
+}
+
+#main .post .post-metadata{
+  display: flex;
+  flex-direction: row;
+}
+
+#main .post .post-metadata span{
+  display: inline-block;
+  color: black;
+  font-size: 15px;
+}
+
+#main .post .post-metadata .metadata-username{
+  margin-right: auto;
+  background-color: yellowgreen;
+  outline: 0.1px solid yellowgreen;
+  transition: all 0.4s;
+}
+
+#main .post .post-metadata .metadata-username:hover{
+  outline: 3px white solid;
+  transition: all 0.4s;
+}
+
+#main .post .post-metadata .metadata-username a{
+  color: black;
+  text-decoration: none;
+  padding: 15px;
+}
+
+#main .post .post-metadata .metadata-topic{
+  background-color: rgb(33, 33, 33);
+  color: yellowgreen;
+  text-decoration: none;
+  font-size: 18px;
+  margin-left: auto;
+  padding: 15px;
+}
+#main .post .post-metadata .metadata-topic:hover{
+  text-decoration: underline;
+}
+
+#main .post .post-metadata .metadata-date{
+  background-color: rgb(33, 33, 33);
+  color: yellowgreen;
+  margin-left: auto;
+  padding: 15px;
+}
+
+#main .post .post-data{
+  display: block;
+  color: white;
+  text-decoration: none;
+  border-top: solid black 4px;
+  outline: 1px transparent solid;
+  transition: all 0.4s;
+  padding-bottom: 10px;
+
+}
+
+#main .post .post-data:hover{
+  outline: 6px white solid;
+  transition: all 0.4s;
+}
+
+#main .post .post-data h2{
+  font-size: 32px;
+  text-align: left;
+  padding: 15px 30px;
+  margin: 0;
+}
+
+#main .post .post-data .paragraph{
+  font-size: 18px;
+  text-align: left;
+  padding: 0 40px 0 40px;
+  max-height: 80px;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#main .post .post-data a{
+  color: rgba(153, 205, 50, 0.742);
+  text-decoration: none;
+  transition: all 0.4s;
+}
+
+#main .post .post-data a:hover{
+  color: white;
+  transition: all 0.4s;
+}
+
+#sidebar{
+  display: inline-block;
+  height: max-content;
+  background-color: rgb(33, 33, 33);
+  border: solid 1px yellowgreen;
+  border-radius: 10px;
+}
+
+#sidebar a.page-link{
+  display: block;
+  margin: 20px auto;
+  padding: 15px;
+  width: 80%;
+  border: solid 2px yellowgreen;
+  color: white;
+  text-decoration: none;
+  text-align: left;
+  font-size: 20px;
+  border-radius: 10px;
+  transition: 0.4s all;
+  z-index: 2;
+}
+
+#sidebar a.page-link:hover{
+  background-color: rgba(153, 205, 50, 0.543);
+  border-width: 6px;
+  border-radius: 20px;
+  transition: 0.4s all;
+}
+
+#sidebar a.page-link.active{
+  background-color: yellowgreen;
+  color: black;
+  border-color: black;
+}
+
+#sidebar a.page-link img{
+  width: 20px;
+  margin-right: 10px;
+  margin-left: 60px;
+  filter:invert();
+  -webkit-filter:invert();
+}
+
+#sidebar a.page-link.active img{
+  filter:none;
+  -webkit-filter:none;
+}
+
+#sidebar h2{
+  font-size: 25px;
+  text-align: left;
+  padding: 20px;
+  color: white;
+  text-decoration: underline;
+  text-decoration-color: yellowgreen;
+  -moz-text-decoration-color: yellowgreen;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+#sidebar .followed-topics{
+  width: 80%;
+  border: 2px solid white;
+  margin: 50px auto;
+  border-radius: 10px;
+}
+
+#sidebar a.followed-topic{
+  display: block;
+  width: max-content;
+  margin: 15px auto;
+  padding: 5px;
+  text-decoration: none;
+  font-size: 20px;
+  color: black;
+  background-color: yellowgreen;
+  transition: all 0.4s;
+  border: 2px black solid;
+  border-radius: 10px;
+
+}
+
+#sidebar a.followed-topic:hover{
+  color: black;
+  background-color: white;
+  border: yellowgreen 4px solid;
+  transition: all 0.4s;
+}

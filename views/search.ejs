@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Search <%=shopName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <h1>Search <%=shopName%></h1>
+    <form action="/search-result" method="GET">
+      <p><span> What type of search would you like to perform?</span></p>
+      <input type="radio" name="search-type" value="similar" checked> Search similar
+      <input type="radio" name="search-type" value="exact"> Search exact<br>
+      <input id="search-box" type="text" name="keyword">
+      <input type="submit" value="Search" >
+    </form>
+  </body>
+</html>

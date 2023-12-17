@@ -1,0 +1,71 @@
+.profile-banner{
+    width: 60%;
+    height: max-content;
+    margin-left: 5%;
+    margin-bottom: 40px;
+    background-color: rgb(33,33,33);
+    border: 2px solid yellowgreen;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.name{
+    display: block;
+    width: max-content;
+    padding: 10px;
+}
+.name span{
+    display: inline;
+    margin: auto 0;
+    margin-left: 20px;
+}
+.userimage{
+    display: inline-block;
+    width: 60px;
+    border: black solid 2px;
+    padding: 5px;
+    filter: invert();
+    border-radius: 10px;
+    -webkit-filter: invert();
+}
+
+.follows{
+    font-size: 22px;
+    padding: 10px;
+    text-align: left;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.follows a{
+    width: fit-content;
+    height: fit-content;
+    text-decoration: none;
+    color: yellowgreen;
+    padding: 5px;
+}
+.follows a:hover{
+    color: white;
+    text-decoration: underline;
+}
+.timestamp{
+    display: block;
+    font-size: 15px;
+    padding: 10px;
+    margin-left: auto;
+    width: max-content;
+}
+
+.subheading{
+    font-size: 22px;
+    background-color: yellowgreen;
+    width: max-content;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    margin-left: 5%;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Search results - <%=shopName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <h1>You searched for: <%=keyword%></h1>
+    <h2 style="color:black;"><span>Name</span>, Price:</h2>
+    <ul>
+      <% for(let i=0; i < availableBooks.length; i++) { %>
+          <li><span><%=availableBooks[i].name%></span>, £<%=availableBooks[i].price%></li>
+      <% } %>
+    </ul>
+    <!-- showing a message if no results are found -->
+    <% if(availableBooks.length == 0){ %>
+      <% if(exact){ %>
+        <p>No book found with name "<%=keyword%>", Try a similar search instead.</p>
+      <% } else{ %>
+          <p>No books found with name similar to "<%=keyword%>".</p>
+      <% } %>
+    <% } %>
+  </body>
+</html>
