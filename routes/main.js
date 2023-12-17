@@ -165,10 +165,10 @@ module.exports = function(app, renderData) {
         db.query(query, [First, Last, Username, email, password], (err, results) => {
             if(err){
                 console.error("error registering", err)
-                if(err.sqlMessage.includes("Duplicate entry") && err.sqlMessage.includes("users.email")){
+                if(err.sqlMessage.includes("email") && err.errno == 1062){
                     res.redirect(req.app.get('baseUrl')+'/register?error=2')
                 }
-                else if(err.sqlMessage.includes("Duplicate entry") && err.sqlMessage.includes("users.username")){
+                else if(err.sqlMessage.includes("username") && err.errno == 1062){
                     res.redirect(req.app.get('baseUrl')+'/register?error=3')
                 }
                 else{
