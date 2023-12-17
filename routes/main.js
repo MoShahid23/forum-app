@@ -184,7 +184,7 @@ module.exports = function(app, renderData) {
                     }
                     else{
                         // Set up the session
-                        res.redirect(`/login?registered=true&password=${password}&email=${email}`);
+                        res.redirect(req.app.get('baseUrl')+`/login?registered=true&password=${password}&email=${email}`);
                     }
                 });
             }
