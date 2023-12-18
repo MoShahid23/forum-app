@@ -1,10 +1,12 @@
 <!doctype html>
 <html>
   <head>
-    <title>Welcome to <%=appName%></title>
+    <title> <%=appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet"  type="text/css" href="/profile.css" />
   </head>
   <body>
+
     <%
       function calculateDaysAgo(timestamp) {
         const postDate = new Date(timestamp);
@@ -36,21 +38,36 @@
         </div>
       </div>
     </header>
+
     <section>
       <div id="spacer"></div>
       <div id="main">
-        <div class="create-post">
-          <a href="/create">
-            <select name="topic">
-              <option value="1" selected>Select a topic</option>
-            </select>
-            <input type="text" placeholder="Create a new post...">
-            <button>
-              Post
-            </button>
-          </a>
+        <div class="subheading"><%= user[0].username %>, your profile - edit posts below</div>
+        <div class="profile-banner">
+            <div class="name">
+                <img class="userimage" src="/images/profile_icon.webp">
+                <span><%= user[0].first_name %> <%= user[0].last_name %></span>
+            </div>
+            <div class="follows">
+                Follows:<br>
+                <%let followsAnything = false; for(u of user){ if(u.topic_name != null){ followsAnything = true; %>
+                    <a href="/topics/<%= u.topic_name %>"> &lt;<%= u.topic_name %>&gt; </a>
+                <% }}if(!followsAnything){ %>
+                    <a href="#"> <%= user[0].username %> does not follow any topics right now </a>
+                <% } %>
+            </div>
+            <div class="timestamp">
+                Member since: <%= user[0].timestamp.toString().split(" ")[1]+" "+user[0].timestamp.toString().split(" ")[2]+" "+user[0].timestamp.toString().split(" ")[3] %>
+            </div>
         </div>
-        <% for (let i = 0; i < results.length; i++) { %>
+
+        <% if(results.length == 0) {%>
+            <div class="subheading">you have not posted anything yet...</div>
+        <% }else{ %>
+            <div class="subheading">your posts posts</div>
+        <% } %>
+
+        <% for (let i = results.length - 1; i >= 0; i--) { %>
           <div class="post">
             <div class="post-metadata">
               <span class="metadata-username">
@@ -58,6 +75,12 @@
                   <img src="/images/profile_icon.webp">
                   <%= results[i].username %>
                 </a>
+                <form method="get" action="/edit/<%= results[i].id %>" id="editForm">
+                    <button type="submit"><img src="/images/edit-icon.png"></button>
+                </form>
+                <form method="get" action="/delete/<%= results[i].id %>" id="deleteForm">
+                    <button type="button"><img src="/images/trash-icon.png"></button>
+                </form>
               </span>
               <a class="metadata-topic" href="/topics/<%= results[i].topic_name %>">
                 &lt;<%= results[i].topic_name %>&gt;
@@ -66,20 +89,48 @@
                 <%= calculateDaysAgo(results[i].timestamp) %> • <%= new Date(results[i].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(results[i].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
               </span>
             </div>
-            <a href="/posts/<%= results[i].id %>" class="post-data">
-              <%- results[i].context %>
-            </a>
+            <form method="get" action="/posts/<%= results[i].id %>" class="post-data">
+                <button type="submit">
+                  <%- results[i].context %>
+                </button>
+            </form>
           </div>
+        <% } %>
+
+        <% if (deleted && deleted === 'true') { %>
+            <div id="notification" class="notification">
+              <!-- Notification content goes here -->
+              Post deleted successfully!
+            </div>
+
+            <script>
+              // Display and fade in the notification
+              var notification = document.getElementById('notification');
+              notification.style.display = 'block';
+              setTimeout(function() {
+                notification.style.opacity = '1';
+              }, 10); // A small delay to allow the display property to take effect
+
+              // Fade out the notification after about 2 seconds
+              setTimeout(function() {
+                notification.style.opacity = '0';
+              }, 2000);
+
+              // Hide the notification after the fade-out animation completes
+              setTimeout(function() {
+                notification.style.display = 'none';
+              }, 2500); // Adjust the delay to match the fade-out duration
+            </script>
         <% } %>
       </div>
 
       <div id="sidebar">
-        <a class="page-link active" href="/"><img src="/images/home_icon.png" alt="">Home</a>
+        <a class="page-link" href="/"><img src="/images/home_icon.png" alt="">Home</a>
         <a class="page-link" href="/topics"><img src="/images/topics_icon.png" alt="">View Topics</a>
         <a class="page-link" href="/users"><img src="/images/users_icon.png" alt="">View Users</a>
         <a class="page-link" href="/about"><img src="/images/about_icon.png" alt="">About</a>
 
-        <% if (topicNamesList && topicNamesList.length > 0) { %>
+        <% if (topicNamesList && topicNamesList.length > 0) {%>
           <div class="followed-topics">
             <h2>Followed:</h2>
             <% for (let i = 0; i < topicNamesList.length; i++) { %>

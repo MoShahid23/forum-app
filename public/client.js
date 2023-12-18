@@ -12,6 +12,18 @@ if(document.getElementById("lname-input")){
     });
 }
 
+if(document.querySelector("#deleteForm button")){
+    let delButtons = document.querySelectorAll("#deleteForm button");
+    for(let delBtn of delButtons){
+        delBtn.addEventListener("click", function(){
+            var result = window.confirm("Are you sure you want to delete this post?");
+            if (result) {
+                delBtn.parentElement.submit();
+            }
+        });
+    }
+}
+
 
 if(document.getElementsByClassName("dropdown")[0]){
 
@@ -37,17 +49,22 @@ let displayPostPreview = function(followed, existing, baseUrl){
     let titleView = document.querySelector(".post-data h2");
     let bodyView = document.querySelector(".post-data .paragraph");
 
-    if(topic.value != ""){
-        topic.value = topic.value.replaceAll(" ", "");
-        topic.value = topic.value.toLowerCase();
-        topic.value = topic.value.replace(/[^a-z]/g, '');
+    try{
+        if(topic.value != ""){
+            topic.value = topic.value.replaceAll(" ", "");
+            topic.value = topic.value.toLowerCase();
+            topic.value = topic.value.replace(/[^a-z]/g, '');
 
-        topicView.innerHTML = "&lt;"+topic.value+"&gt;"
-        topicView.setAttribute("href", "/topics/"+topic.value);
+            topicView.innerHTML = "&lt;"+topic.value+"&gt;"
+            topicView.setAttribute("href", "/topics/"+topic.value);
+        }
+        else{
+            topicView.innerHTML = "&lt;Topic not selected&gt;"
+            topicView.setAttribute("href", "/topics/");
+        }
     }
-    else{
-        topicView.innerHTML = "&lt;Topic not selected&gt;"
-        topicView.setAttribute("href", "/topics/");
+    catch{
+
     }
 
     if(title.value != ""){
@@ -63,34 +80,44 @@ let displayPostPreview = function(followed, existing, baseUrl){
             return line.trim() !== "" || array.slice(index + 1).some(nextLine => nextLine.trim() !== "");
         }).join("<br>")
         .replaceAll("<*h>", "<h3>").replaceAll("<h*>", "</h3>")
-        .replaceAll("<*l link = ", "<a href=").replaceAll("<l*>", "</a>");
+        .replaceAll("<*link=", "<a href=").replaceAll("<l*>", "</a>");
     }
     else{
         bodyView.innerHTML = "Post body text not entered";
     }
 
-    if(body.value!="" && topic.value!="" && title.value!=""){
-        if(followed.includes(topic.value)){
-            //yes can post
-            document.querySelector('.create-post').action = baseUrl+"/post/ok"
-            document.getElementById("submitButton").innerText = "create post?"
+    if(!document.title.includes("Edit post")){
+        if(body.value!="" && topic.value!="" && title.value!=""){
+            if(followed.includes(topic.value)){
+                //yes can post
+                document.querySelector('.create-post').action = baseUrl+"/post/ok"
+                document.getElementById("submitButton").innerText = "create post?"
+            }
+            else if(!followed.includes(topic.value) && existing.includes(topic.value)){
+                //yes u cna post but need join first
+                document.querySelector('.create-post').action = baseUrl+"/post/join"
+                document.getElementById("submitButton").innerText = "join topic and create post?"
+            }
+            else{
+                //it doe not exist yet but u can post after create
+                document.querySelector('.create-post').action = baseUrl+"/post/create"
+                document.getElementById("submitButton").innerText = "create topic and post?"
+            }
+            document.getElementById("submitButton").style.backgroundColor = "yellowgreen";
+        }else{
+            document.getElementById("submitButton").innerText = "please fill in all the fields"
+            document.getElementById("submitButton").style.backgroundColor = "red";
         }
-        else if(!followed.includes(topic.value) && existing.includes(topic.value)){
-            //yes u cna post but need join first
-            document.querySelector('.create-post').action = baseUrl+"/post/join"
-            document.getElementById("submitButton").innerText = "join topic and create post?"
+    }else{ //editing post
+        if(body.value!=""  && title.value!=""){
+            document.getElementById("submitButton").style.backgroundColor = "yellowgreen";
+            document.getElementById("submitButton").innerText = "Save edit"
+        }else{
+            document.getElementById("submitButton").innerText = "please fill in all the fields"
+            document.getElementById("submitButton").style.backgroundColor = "red";
         }
-        else{
-            //it doe not exist yet but u can post after create
-            document.querySelector('.create-post').action = baseUrl+"/post/create"
-            document.getElementById("submitButton").innerText = "create topic and post?"
-        }
-        document.getElementById("submitButton").style.backgroundColor = "yellowgreen";
-    }else{
-        console.log("false")
-        document.getElementById("submitButton").innerText = "please fill in all the fields"
-        document.getElementById("submitButton").style.backgroundColor = "red";
     }
+
 }
 
 if(document.getElementsByTagName("form").length>1 && document.getElementsByTagName("form")[1].classList.contains("create-post")){
@@ -119,17 +146,11 @@ if(document.getElementsByTagName("form").length>1 && document.getElementsByTagNa
 
     document.getElementById("insert-link").addEventListener("click", function(){
         let body = document.getElementById("selectedBody");
-        body.value = body.value+'\n<*l link = "insert link in here"> type link name here... <l*>'
+        body.value = body.value+'\n<*link="insert link in here"> type link name here... <l*>'
     });
 
     document.getElementById("submitButton").addEventListener("click", function(){
         let body = document.querySelector(".post-data");
-        let topic = document.getElementById("selectedTopic");
-
-        let selectedTopic = document.createElement('input');
-        selectedTopic.type = 'hidden';
-        selectedTopic.name = 'topic_name';
-        selectedTopic.value = topic.value;
 
         let postContext = document.createElement('input');
         postContext.type = 'hidden';
@@ -137,8 +158,19 @@ if(document.getElementsByTagName("form").length>1 && document.getElementsByTagNa
         postContext.value = body.innerHTML;
 
         // Append the hidden input to the form
-        document.querySelector('.create-post').appendChild(selectedTopic);
         document.querySelector('.create-post').appendChild(postContext);
+
+        //if creating a post also set topic
+        if(!document.title.includes("Edit post")){
+            let topic = document.getElementById("selectedTopic");
+
+            let selectedTopic = document.createElement('input');
+            selectedTopic.type = 'hidden';
+            selectedTopic.name = 'topic_name';
+            selectedTopic.value = topic.value;
+
+            document.querySelector('.create-post').appendChild(selectedTopic);
+        }
 
         if( document.getElementById("submitButton").innerText != "please fill in all the fields"){
             document.querySelector('.create-post').submit();

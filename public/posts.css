@@ -1,7 +1,7 @@
 #main .post .post-data .paragraph{
     font-size: 18px;
     text-align: left;
-    padding: 0 40px 0 40px;
+    padding: 10px 40px 10px 40px;
     max-height: fit-content;
     max-width: 100%;
     overflow: unset;

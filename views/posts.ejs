@@ -44,10 +44,16 @@
           <div class="post">
             <div class="post-metadata">
               <span class="metadata-username">
-                <a class="img-link" href="/users/<%= results[i].username %>">
-                  <img src="/images/profile_icon.webp">
-                  <%= results[i].username %>
-                </a>
+                <% if(results[0].username == null){ %>
+                    <a class="img-link" href="#">
+                        deleted by user
+                    </a>
+                <% } else{ %>
+                    <a class="img-link" href="/users/<%= results[0].username %>">
+                        <img src="/images/profile_icon.webp">
+                        <%= results[0].username %>
+                    </a>
+                <% } %>
               </span>
               <a class="metadata-topic" href="/topics/<%= results[i].topic_name %>">
                 &lt;<%= results[i].topic_name %>&gt;

@@ -192,22 +192,21 @@ module.exports = function(app, renderData) {
 
     //list all books and their prices from database.
     app.get('/posts/:postid', isAuthenticated, function(req, res) {
-        
         let query = `
-        SELECT
-            posts.id AS post_id,
-            posts.timestamp,
-            posts.context,
-            topics.name AS topic_name,
-            users.username
-        FROM
-            posts
-        JOIN
-            topics ON posts.topic_id = topics.id
-        JOIN
-            users ON posts.user_id = users.id
-        WHERE
-            posts.id = ?;
+            SELECT
+                posts.id AS post_id,
+                posts.timestamp,
+                posts.context,
+                topics.name AS topic_name,
+                users.username
+            FROM
+                posts
+            JOIN
+                topics ON posts.topic_id = topics.id
+            LEFT JOIN
+                users ON posts.user_id = users.id
+            WHERE
+                posts.id = ?;
         `;
 
         db.query(query, [req.params.postid], (err, results) => {
@@ -267,27 +266,27 @@ module.exports = function(app, renderData) {
     app.get('/topics/:topic', isAuthenticated, function(req, res) {
         console.log("params"+req.params.topic)
         let query = `
-            SELECT
-                posts.id,
-                posts.timestamp,
-                posts.context,
-                topics.name AS topic_name,
-                users.username
-            FROM
-                posts
-            JOIN
-                topics ON posts.topic_id = topics.id
-            JOIN
-                users ON posts.user_id = users.id
-            WHERE
-                topics.name = ?;
+        SELECT
+            posts.id,
+            posts.timestamp,
+            posts.context,
+            topics.name AS topic_name,
+            users.username
+        FROM
+            posts
+        JOIN
+            topics ON posts.topic_id = topics.id
+        LEFT JOIN
+            users ON posts.user_id = users.id
+        WHERE
+            topics.name = ?;
         `;
 
         db.query(query, [req.params.topic], (err, results) => {
             if (err) {
                 res.status(404).render('404.ejs');
             }
-
+            console.log(results)
             //pass in all relevant data for ejs template render.
             let newData = Object.assign({}, renderData, {sessionData:req.session, results});
 
@@ -353,7 +352,7 @@ module.exports = function(app, renderData) {
             JOIN
                 users ON posts.user_id = users.id
             WHERE
-                users.username = ?;  -- Change the condition to filter by username
+                users.username = ?;
         `;
 
         db.query(query, [req.params.user], (err, results) => {
@@ -373,10 +372,10 @@ module.exports = function(app, renderData) {
                     topics.name AS topic_name
                 FROM
                     users
-                INNER JOIN members ON users.id = members.user_id
-                INNER JOIN topics ON members.topic_id = topics.id
+                LEFT JOIN members ON users.id = members.user_id
+                LEFT JOIN topics ON members.topic_id = topics.id
                 WHERE
-                    users.username = ?;  -- Change the condition to filter by username
+                    users.username = ?;
             `;
 
             db.query(query, [req.params.user], (err, results) => {
@@ -405,6 +404,7 @@ module.exports = function(app, renderData) {
     app.get('/create', isAuthenticated, function(req, res) {
         res.redirect(req.app.get('baseUrl')+'/create/-')
     })
+
     app.get('/create/:topic', isAuthenticated, function(req, res) {
 
         let newData;
@@ -606,5 +606,207 @@ module.exports = function(app, renderData) {
             });
         }
 
+    });
+
+    app.get('/profile', isAuthenticated, function(req, res) {
+        let query = `
+            SELECT
+                posts.id,
+                posts.timestamp,
+                posts.context,
+                topics.name AS topic_name,
+                users.username
+            FROM
+                posts
+            JOIN
+                topics ON posts.topic_id = topics.id
+            JOIN
+                users ON posts.user_id = users.id
+            WHERE
+                users.username = ?;
+        `;
+
+        db.query(query, [req.session.username], (err, results) => {
+            if (err) {
+                res.status(404).render('404.ejs');
+            }
+
+            //pass in all relevant data for ejs template render.
+            let newData = Object.assign({}, renderData, {sessionData:req.session, results});
+
+            let query = `
+                SELECT
+                    users.username,
+                    users.first_name,
+                    users.last_name,
+                    users.timestamp,
+                    topics.name AS topic_name
+                FROM
+                    users
+                LEFT JOIN members ON users.id = members.user_id
+                LEFT JOIN topics ON members.topic_id = topics.id
+                WHERE
+                    users.username = ?;
+            `;
+
+            db.query(query, [req.session.username], (err, results) => {
+                if (err) {
+                    res.status(404).render('404.ejs');
+                }
+                console.log(results)
+                //pass in all relevant data for ejs template render.
+                newData = Object.assign({}, newData, {user:results});
+
+                db.query(
+                    'CALL GetUserTopics(?);',
+                    [req.session.userId],
+                    (err, results) => {
+                        if (err) throw err;
+                        // Extract topic names from the result
+                        const topicNamesList = results[0].map(row => row.name);
+                        // Add topicNamesList to newData
+                        newData = Object.assign({}, newData, { topicNamesList, deleted:req.query.deleted });
+                        res.render("profile.ejs", newData);
+                });
+            });
+        });
+    });
+
+    app.get('/delete/:postID', isAuthenticated, function(req, res) {
+        let query = `
+        SELECT
+            CASE
+                WHEN COUNT(*) = 0 THEN 1  -- It's the first post
+                ELSE 0                      -- It's not the first post
+            END AS isFirstPost
+        FROM
+            posts
+        WHERE
+            topic_id = (SELECT topic_id FROM posts WHERE id = ?)
+            AND timestamp < (SELECT timestamp FROM posts WHERE id = ?);
+        `;
+
+        db.query(query, [req.params.postID, req.params.postID], (err, isFirstPost) => {
+            if (err) {
+                console.error(err)
+                res.status(404).render('404.ejs');
+            }
+
+            console.log(isFirstPost)
+
+
+            if(isFirstPost[0].isFirstPost == 0){
+                let query = `
+                    DELETE FROM posts WHERE id = ?;
+                `;
+
+                db.query(query, [req.params.postID], (err, results) => {
+                    if (err) {
+                        res.status(404).render('404.ejs');
+                    }
+
+                    res.redirect(req.app.get('baseUrl')+'/profile?deleted=true')
+                });
+            }
+            else if(isFirstPost[0].isFirstPost == 1){
+                let query = `
+                    UPDATE posts SET user_id = NULL WHERE id = ?;
+                `;
+
+                db.query(query, [req.params.postID], (err, results) => {
+                    if (err) {
+                        res.status(404).render('404.ejs');
+                    }
+
+                    res.redirect(req.app.get('baseUrl')+'/profile?deleted=true')
+                });
+            }
+            else{
+                res.status(404).render('404.ejs');
+            }
+        });
+    });
+
+    app.get('/edit/:postID', isAuthenticated, function(req, res) {
+        let query = `
+            SELECT
+                posts.id AS post_id,
+                posts.timestamp,
+                posts.context,
+                topics.name AS topic_name,
+                users.username
+            FROM
+                posts
+            JOIN
+                topics ON posts.topic_id = topics.id
+            LEFT JOIN
+                users ON posts.user_id = users.id
+            WHERE
+                posts.id = ?;
+        `;
+
+        db.query(query, [req.params.postID, req.params.postID], (err, result) => {
+            if (err) {
+                console.error(err)
+                res.status(404).render('404.ejs');
+            }
+
+            //verify user is creator of post
+            if(result[0].username == req.session.username){
+                let newData = Object.assign({}, renderData, {sessionData:req.session, results:result});
+
+                db.query(
+                    'CALL GetUserTopics(?);',
+                    [req.session.userId],
+                    (err, results) => {
+                        if (err) throw err;
+                        // Extract topic names from the result
+                        const topicNamesList = results[0].map(row => row.name);
+                        // Add topicNamesList to newData
+                        newData = Object.assign({}, newData, { topicNamesList });
+                        res.render("edit.ejs", newData);
+                });
+            }
+            else{
+                res.status(404).render('404.ejs');
+            }
+
+        });
+    });
+
+    app.get('/follow/:topic', isAuthenticated, function(req, res) {
+        let query = `
+            INSERT INTO
+                members (topic_id, user_id)
+            VALUES
+            ((SELECT id FROM topics WHERE name = ?), ?);
+        `;
+
+        db.query(query, [req.params.topic, req.session.userId], (err, result) => {
+            if (err) {
+                console.error(err)
+                res.status(404).render('404.ejs');
+            }
+            res.redirect(req.app.get('baseUrl')+"/topics/"+req.params.topic);
+        });
+    });
+
+    app.get('/unfollow/:topic', isAuthenticated, function(req, res) {
+        let query = `
+            DELETE FROM
+                members
+            WHERE
+                topic_id = (SELECT id FROM topics WHERE name = ?)
+                AND
+                user_id = ?;
+        `;
+
+        db.query(query, [req.params.topic, req.session.userId], (err, result) => {
+            if (err) {
+                console.error(err)
+                res.status(404).render('404.ejs');
+            }
+            res.redirect(req.app.get('baseUrl')+"/topics/"+req.params.topic);
+        });
     });
 }

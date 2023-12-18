@@ -1,4 +1,5 @@
 .topic-header{
+    display: flex;
     background-color: yellowgreen;
     width: 80%;
     text-align: left;
@@ -15,6 +16,36 @@
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
+}
+.topic-header form{
+    display: flex;
+    flex: 3;
+}
+.topic-header form button{
+    display: inline-block;
+    width: 90px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    border: black 2px solid;
+    margin-left: auto;
+    font-weight: bold;
+    transition: 0.4s all;
+    transform: scale(1);
+}
+.topic-header form button.unfollow{
+    width: 90px;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: yellowgreen;
+    color: black;
+}
+.topic-header form button:hover{
+    transition: 0.4s all;
+    background-color: white;
+    color: black;
+    transform: scale(1.2);
 }
 
 .topic-subheading{

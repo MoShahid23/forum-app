@@ -42,15 +42,37 @@
     <section>
       <div id="spacer"></div>
       <div id="main">
-        <div class="topic-header">&lt;<%= results[0].topic_name %>&gt; Topic starter</div>
+        <div class="topic-header">
+            &lt;<%= results[0].topic_name %>&gt; Topic starter
+            <% if (topicNamesList && topicNamesList.includes(results[0].topic_name)){ %>
+                <form method="get" action="/unfollow/<%= results[0].topic_name %>">
+                    <button class="unfollow" type="submit">
+                        Unfollow
+                    </button>
+                </form>
+            <% } else { %>
+                <form method="get" action="/follow/<%= results[0].topic_name %>">
+                    <button type="submit">
+                        Follow
+                    </button>
+                </form>
+            <% } %>
+        </div>
 
         <div class="post">
             <div class="post-metadata">
               <span class="metadata-username">
-                <a class="img-link" href="/users/<%= results[0].username %>">
-                  <img src="/images/profile_icon.webp">
-                  <%= results[0].username %>
-                </a>
+                <% if(results[0].username == null){ %>
+                    <a class="img-link" href="#">
+                        deleted by user
+                    </a>
+                <% } else{ %>
+                    <a class="img-link" href="/users/<%= results[0].username %>">
+                        <img src="/images/profile_icon.webp">
+                        <%= results[0].username %>
+                    </a>
+                <% } %>
+
               </span>
               <a class="metadata-topic" href="/topics/<%= results[0].topic_name %>">
                 &lt;<%= results[0].topic_name %>&gt;
@@ -59,9 +81,11 @@
                 <%= calculateDaysAgo(results[0].timestamp) %> • <%= new Date(results[0].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(results[0].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
               </span>
             </div>
-            <a href="/posts/<%= results[0].id %>" class="post-data">
-              <%- results[0].context %>
-            </a>
+            <form method="get" action="/posts/<%= results[0].id %>" class="post-data">
+                <button type="submit">
+                  <%- results[0].context %>
+                </button>
+            </form>
         </div>
 
         <div class="create-post">
@@ -82,7 +106,7 @@
             <div class="topic-subheading">Posted since:</div>
         <% } %>
 
-        <% for (let i = 1; i < results.length; i++) { %>
+        <% for (let i = results.length - 1; i >= 1; i--) { %>
           <div class="post">
             <div class="post-metadata">
               <span class="metadata-username">
@@ -98,9 +122,11 @@
                 <%= calculateDaysAgo(results[i].timestamp) %> • <%= new Date(results[i].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(results[i].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
               </span>
             </div>
-            <a href="/posts/<%= results[i].id %>" class="post-data">
-              <%- results[i].context %>
-            </a>
+            <form method="get" action="/posts/<%= results[i].id %>" class="post-data">
+                <button type="submit">
+                  <%- results[i].context %>
+                </button>
+            </form>
           </div>
         <% } %>
       </div>

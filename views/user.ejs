@@ -50,8 +50,10 @@
             </div>
             <div class="follows">
                 Follows:<br>
-                <% for(u of user){ %>
+                <%let followsAnything = false; for(u of user){ if(u.topic_name != null){ followsAnything = true; %>
                     <a href="/topics/<%= u.topic_name %>"> &lt;<%= u.topic_name %>&gt; </a>
+                <% }}if(!followsAnything){ %>
+                    <a href="#"> <%= user[0].username %> does not follow any topics right now </a>
                 <% } %>
             </div>
             <div class="timestamp">
@@ -65,7 +67,7 @@
             <div class="subheading"><%= user[0].username %>'s posts</div>
         <% } %>
 
-        <% for (let i = 0; i < results.length; i++) { %>
+        <% for (let i = results.length - 1; i >= 0; i--) { %>
           <div class="post">
             <div class="post-metadata">
               <span class="metadata-username">
@@ -81,9 +83,11 @@
                 <%= calculateDaysAgo(results[i].timestamp) %> • <%= new Date(results[i].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(results[i].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
               </span>
             </div>
-            <a href="/posts/<%= results[i].id %>" class="post-data">
-              <%- results[i].context %>
-            </a>
+            <form method="get" action="/posts/<%= results[i].id %>" class="post-data">
+                <button type="submit">
+                  <%- results[i].context %>
+                </button>
+            </form>
           </div>
         <% } %>
       </div>

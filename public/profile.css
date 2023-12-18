@@ -57,15 +57,3 @@
     margin-left: auto;
     width: max-content;
 }
-
-.subheading{
-    font-size: 22px;
-    background-color: yellowgreen;
-    width: max-content;
-    color: black;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: 700;
-    margin-left: 5%;
-    margin-bottom: 10px;
-}

@@ -50,6 +50,13 @@
             </button>
           </a>
         </div>
+
+        <% if(results.length == 0) {%>
+          <div class="subheading">No posts to show! <a href="/topics">Follow topics here...</a></div>
+        <% }else{ %>
+            <div class="subheading">Latest updates from your followed topics:</div>
+        <% } %>
+
         <% for (let i = 0; i < results.length; i++) { %>
           <div class="post">
             <div class="post-metadata">
@@ -66,9 +73,11 @@
                 <%= calculateDaysAgo(results[i].timestamp) %> • <%= new Date(results[i].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(results[i].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
               </span>
             </div>
-            <a href="/posts/<%= results[i].id %>" class="post-data">
-              <%- results[i].context %>
-            </a>
+            <form method="get" action="/posts/<%= results[i].id %>" class="post-data">
+              <button type="submit">
+                <%- results[i].context %>
+              </button>
+            </form>
           </div>
         <% } %>
       </div>
