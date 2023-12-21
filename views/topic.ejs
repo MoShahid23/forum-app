@@ -1,32 +1,18 @@
 <!doctype html>
+<!-- This page displays a specific topic and its content -->
 <html>
   <head>
-    <title>Welcome to <%=appName%></title>
+    <title><%= results[0].topic_name %> - <%=appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
     <link rel="stylesheet"  type="text/css" href="/topic.css" />
   </head>
   <body>
-
-    <%
-      function calculateDaysAgo(timestamp) {
-        const postDate = new Date(timestamp);
-        const currentDate = new Date();
-        const timeDifference = currentDate - postDate;
-        const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        if(daysAgo == 0){
-          return "Posted today"
-        }else if(daysAgo == 1){
-          return "Posted yesterday"
-        }
-        return "Posted "+daysAgo+" days ago";
-      }
-    %>
-
     <header>
       <h1><a href="/"><%=appName%></a></h1>
 
-      <form id="searchForm" method="POST" action="/search">
-        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+      <form id="searchForm" method="GET" action="/search">
+        <input type="text" id="searchInput" name="query" placeholder="Explore topics, posts and users...">
+        <input type="text" name="resulttype" id="searchType" value="posts" hidden>
         <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
       </form>
 
@@ -150,4 +136,27 @@
   </body>
 
   <script src="/client.js"></script>
+  <%
+    function calculateDaysAgo(timestamp) {
+      const postDate = new Date(timestamp);
+      const currentDate = new Date();
+      const timeDifference = currentDate - postDate;
+      const secondsAgo = Math.floor(timeDifference / 1000);
+      const minutesAgo = Math.floor(secondsAgo / 60);
+      const hoursAgo = Math.floor(minutesAgo / 60);
+      const daysAgo = Math.floor(hoursAgo / 24);
+
+      if (daysAgo > 1) {
+        return `Posted ${daysAgo} days ago`;
+      } else if (daysAgo === 1) {
+        return 'Posted yesterday';
+      } else if (hoursAgo >= 1) {
+        return `Posted ${hoursAgo} ${hoursAgo === 1 ? 'hour' : 'hours'} ago`;
+      } else if (minutesAgo >= 1) {
+        return `Posted ${minutesAgo} ${minutesAgo === 1 ? 'minute' : 'minutes'} ago`;
+      } else {
+        return `Posted less than a minute ago`;
+      }
+    }
+  %>
 </html>

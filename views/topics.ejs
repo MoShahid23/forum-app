@@ -1,7 +1,8 @@
 <!doctype html>
+<!-- This page displays list of all topics on site -->
 <html>
   <head>
-    <title>Explore - <%=appName%></title>
+    <title>Explore Topics - <%=appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
     <link rel="stylesheet"  type="text/css" href="/topics.css" />
   </head>
@@ -10,8 +11,9 @@
     <header>
       <h1><a href="/"><%=appName%></a></h1>
 
-      <form id="searchForm" method="POST" action="/search">
-        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+      <form id="searchForm" method="GET" action="/search">
+        <input type="text" id="searchInput" name="query" placeholder="Explore topics, posts and users...">
+        <input type="text" name="resulttype" id="searchType" value="posts" hidden>
         <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
       </form>
 

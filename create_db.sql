@@ -1,10 +1,6 @@
-# Create database script for the forum app
-
-# Create the database
 CREATE DATABASE forumApp;
 USE forumApp;
 
-# Create the tables
 CREATE TABLE users(
     id          INT PRIMARY KEY AUTO_INCREMENT,
     first_name  VARCHAR(20) NOT NULL,
@@ -47,10 +43,6 @@ BEGIN
     INNER JOIN members ON topics.id = members.topic_id
     WHERE members.user_id = userIdParam;
 END //
-
-DELIMITER ;
-
-DELIMITER //
 
 CREATE PROCEDURE CreateTopic(IN newTopicName VARCHAR(20))
 BEGIN

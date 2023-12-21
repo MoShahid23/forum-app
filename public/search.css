@@ -1,0 +1,23 @@
+.search-type-btn{
+    width: 20%;
+    height: 50px;
+
+    background-color: rgb(33,33,33);
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    border: yellowgreen 2px solid;
+    border-radius: 10px;
+    margin-bottom: 40px;
+
+    transition: all 0.4s;
+}
+.search-type-btn.active{
+    background-color: yellowgreen;
+    color: black;
+    text-decoration: underline;
+}
+.search-type-btn:hover{
+    transform: scale(1.1);
+    transition: all 0.4s;
+}

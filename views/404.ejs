@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>404 - <%=appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+
+    <header>
+      <h1><a href="/"><%=appName%></a></h1>
+
+      <form id="searchForm" method="GET" action="/search">
+        <input type="text" id="searchInput" name="query" placeholder="Explore topics, posts and users...">
+        <input type="text" name="resulttype" id="searchType" value="posts" hidden>
+        <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
+      </form>
+
+      <div class="dropdown">
+        <button class="dropbtn">▼&nbsp; <%=sessionData.username%></button>
+        <div class="dropdown-content">
+          <a class="img-link" href="/profile"><img src="/images/profile_icon.webp">View Profile</a>
+          <a class="img-link" href="/logout"><img src="/images/logout_icon.png">Log Out</a>
+        </div>
+      </div>
+    </header>
+    <section>
+      <div id="spacer"></div>
+      <div id="main">
+        <h2 id="error404">404 <br> page not found</h2>
+      </div>
+
+  </body>
+
+  <script src="/client.js"></script>
+</html>

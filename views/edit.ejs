@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- This page allows users to edit a particular post -->
 <html>
   <head>
     <title>Edit post - <%=appName%></title>
@@ -11,8 +12,9 @@
     <header>
       <h1><a href="/"><%=appName%></a></h1>
 
-      <form id="searchForm" method="POST" action="/search">
-        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+      <form id="searchForm" method="GET" action="/search">
+        <input type="text" id="searchInput" name="query" placeholder="Explore topics, posts and users...">
+        <input type="text" name="resulttype" id="searchType" value="posts" hidden>
         <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
       </form>
 
@@ -27,7 +29,7 @@
     <section>
       <div id="spacer"></div>
       <div id="main">
-        <form class="create-post" method="POST" action="/post">
+        <form class="create-post" method="POST" action="/edit/submit/<%= results[0].post_id %>">
             <h2 class="nonpost">Editing your post in &lt;<%= results[0].topic_name %>&gt;</h2>
 
             <div class="title-input">
@@ -44,15 +46,15 @@
                 </label>
             </div>
 
-            <script>
+            <script> //script is important as it divides the context data from the table into displayable components
                 document.addEventListener('DOMContentLoaded', function () {
-                    // Create a temporary container
+                    //reate a temporary container
                     let tempContainer = document.createElement('div');
 
-                    // Set its innerHTML with the HTML string
+                    //aet its innerHTML with the HTML string
                     tempContainer.innerHTML = `<%= results[0].context %>`;
                     tempContainer.innerHTML = tempContainer.innerText
-                    // Accessing the inner text of the 'a' element
+                    //accessing the inner text of the anchor element
                     console.log(tempContainer.querySelector("h2").innerText);
                     document.querySelector("#selectedTitle").setAttribute("value", tempContainer.querySelector("h2").innerText)
                     tempContainer.querySelector("h2").remove();
@@ -60,7 +62,9 @@
                     document.querySelector("#selectedBody").innerText =  tempContainer.querySelector(".paragraph").innerHTML
                     .replaceAll("<br>", "\n")
                     .replaceAll("<h3>", "<*h>").replaceAll("</h3>", "<h*>")
-                    .replaceAll("<a href=", "<*link=").replaceAll("</a>", "<l*>");
+                    .replaceAll("<a href=", "<*link=").replaceAll("</a>", "<l*>")
+                    .replaceAll("&lt;", "<").replaceAll("&gt;", ">")
+                    .replaceAll("''", "'");
                 });
             </script>
 

@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- This is the login page -->
 <html>
   <head>
     <title>Login - <%=appName%></title>
@@ -7,8 +8,11 @@
 
   </head>
   <body>
+    <!-- header? -->
     <h1><a href="/"><%=appName%></a></h1>
     <h2>Login</h2>
+
+    <!-- error displaying -->
     <% if (errorMessage) { %>
       <p style="width: fit-content; text-align: center; font-size:20px; background-color: red;"><%= errorMessage %></p>
     <% } else if(register.registered){%>
@@ -19,7 +23,7 @@
       <form method="POST" action="/attempt_login">
         <% if (register.registered) { %>
           <p><span><img src="/images/mail_icon.png">Email/user:</span><input id="email-input" type="text" name="email" value="<%=register.email%>" title="Enter a valid email address or username" required/></p>
-          <p><span><img src="/images/lock_icon.png">Password:</span><input id="password-input" type="password" name="password" value="<%=register.password%>" required/></p>
+          <p><span><img src="/images/lock_icon.png">Password:</span><input id="password-input" type="password" name="password" required/></p>
         <% } else{%>
           <p><span><img src="/images/mail_icon.png">Email/user:</span><input id="email-input" type="text" name="email" title="Enter a valid email address or username" required/></p>
           <p><span><img src="/images/lock_icon.png">Password:</span><input id="password-input" type="password" name="password" required/></p>

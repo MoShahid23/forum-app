@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- This is the register page -->
 <html>
   <head>
     <title>Register - <%=appName%></title>
@@ -6,11 +7,16 @@
     <link rel="stylesheet"  type="text/css" href="/authentication.css" />
   </head>
   <body>
+    <!-- header type thing -->
     <h1><a href="/"><%=appName%></a></h1>
     <h2>Register</h2>
+
+    <!-- displays error messagge if exists -->
     <% if (errorMessage != "") { %>
       <p style="width: fit-content; text-align: center; font-size:20px; background-color: red;"><%= errorMessage %></p>
     <% } %>
+
+    <!-- login form -->
     <div class="form-container">
       <form method="POST" action="/attempt_register">
         <p><span>First Name:</span><input id="lname-input" type="text" name="First" pattern="[a-zA-Z]+" required/></p>

@@ -1,32 +1,18 @@
 <!doctype html>
+<!-- This is the user's personal porofile page -->
 <html>
   <head>
-    <title> <%=appName%></title>
+    <title><%=user[0].username%> - <%=appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
     <link rel="stylesheet"  type="text/css" href="/profile.css" />
   </head>
   <body>
-
-    <%
-      function calculateDaysAgo(timestamp) {
-        const postDate = new Date(timestamp);
-        const currentDate = new Date();
-        const timeDifference = currentDate - postDate;
-        const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        if(daysAgo == 0){
-          return "Posted today"
-        }else if(daysAgo == 1){
-          return "Posted yesterday"
-        }
-        return "Posted "+daysAgo+" days ago";
-      }
-    %>
-
     <header>
       <h1><a href="/"><%=appName%></a></h1>
 
-      <form id="searchForm" method="POST" action="/search">
-        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+      <form id="searchForm" method="GET" action="/search">
+        <input type="text" id="searchInput" name="query" placeholder="Explore topics, posts and users...">
+        <input type="text" name="resulttype" id="searchType" value="posts" hidden>
         <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
       </form>
 
@@ -40,8 +26,11 @@
     </header>
 
     <section>
+
       <div id="spacer"></div>
+
       <div id="main">
+        <!-- users data displayed in this banner -->
         <div class="subheading"><%= user[0].username %>, your profile - edit posts below</div>
         <div class="profile-banner">
             <div class="name">
@@ -56,6 +45,7 @@
                     <a href="#"> <%= user[0].username %> does not follow any topics right now </a>
                 <% } %>
             </div>
+            <!-- only wnated to display the date here -->
             <div class="timestamp">
                 Member since: <%= user[0].timestamp.toString().split(" ")[1]+" "+user[0].timestamp.toString().split(" ")[2]+" "+user[0].timestamp.toString().split(" ")[3] %>
             </div>
@@ -67,6 +57,7 @@
             <div class="subheading">your posts posts</div>
         <% } %>
 
+        <!-- this time, two forms are attached to the posts where you can edit or delete a post -->
         <% for (let i = results.length - 1; i >= 0; i--) { %>
           <div class="post">
             <div class="post-metadata">
@@ -99,27 +90,24 @@
 
         <% if (deleted && deleted === 'true') { %>
             <div id="notification" class="notification">
-              <!-- Notification content goes here -->
               Post deleted successfully!
             </div>
 
             <script>
-              // Display and fade in the notification
+              //displays a fade in and out notification when a post is deleted. experimented didn't use anywhere alse
               var notification = document.getElementById('notification');
               notification.style.display = 'block';
               setTimeout(function() {
                 notification.style.opacity = '1';
-              }, 10); // A small delay to allow the display property to take effect
+              }, 10);
 
-              // Fade out the notification after about 2 seconds
               setTimeout(function() {
                 notification.style.opacity = '0';
               }, 2000);
 
-              // Hide the notification after the fade-out animation completes
               setTimeout(function() {
                 notification.style.display = 'none';
-              }, 2500); // Adjust the delay to match the fade-out duration
+              }, 2500); 
             </script>
         <% } %>
       </div>
@@ -143,4 +131,27 @@
   </body>
 
   <script src="/client.js"></script>
+  <%
+    function calculateDaysAgo(timestamp) {
+      const postDate = new Date(timestamp);
+      const currentDate = new Date();
+      const timeDifference = currentDate - postDate;
+      const secondsAgo = Math.floor(timeDifference / 1000);
+      const minutesAgo = Math.floor(secondsAgo / 60);
+      const hoursAgo = Math.floor(minutesAgo / 60);
+      const daysAgo = Math.floor(hoursAgo / 24);
+
+      if (daysAgo > 1) {
+        return `Posted ${daysAgo} days ago`;
+      } else if (daysAgo === 1) {
+        return 'Posted yesterday';
+      } else if (hoursAgo >= 1) {
+        return `Posted ${hoursAgo} ${hoursAgo === 1 ? 'hour' : 'hours'} ago`;
+      } else if (minutesAgo >= 1) {
+        return `Posted ${minutesAgo} ${minutesAgo === 1 ? 'minute' : 'minutes'} ago`;
+      } else {
+        return `Posted less than a minute ago`;
+      }
+    }
+  %>
 </html>

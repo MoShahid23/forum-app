@@ -1,17 +1,154 @@
 <!doctype html>
+<!-- This is the dedicated search page -->
 <html>
   <head>
-    <title>Search <%=shopName%></title>
+    <title>Search - <%=appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet"  type="text/css" href="/search.css" />
+      <link rel="stylesheet"  type="text/css" href="/topics.css" />
   </head>
   <body>
-    <h1>Search <%=shopName%></h1>
-    <form action="/search-result" method="GET">
-      <p><span> What type of search would you like to perform?</span></p>
-      <input type="radio" name="search-type" value="similar" checked> Search similar
-      <input type="radio" name="search-type" value="exact"> Search exact<br>
-      <input id="search-box" type="text" name="keyword">
-      <input type="submit" value="Search" >
-    </form>
+    <header>
+      <h1><a href="/"><%=appName%></a></h1>
+
+      <form id="searchForm" method="GET" action="/search">
+        <input type="text" id="searchInput" name="query" placeholder="Explore topics, posts and users..." value="<%= searched %>">
+        <input type="text" name="resulttype" id="searchType" value="<%= resulttype %>" hidden>
+        <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
+      </form>
+
+      <div class="dropdown">
+        <button class="dropbtn">▼&nbsp; <%=sessionData.username%></button>
+        <div class="dropdown-content">
+          <a class="img-link" href="/profile"><img src="/images/profile_icon.webp">View Profile</a>
+          <a class="img-link" href="/logout"><img src="/images/logout_icon.png">Log Out</a>
+        </div>
+      </div>
+    </header>
+    <section>
+      
+      <div id="spacer"></div>
+
+      <div id="main">
+
+        <div class="subheading">Search type</div>
+
+        <!-- creating buttons that select search result type and assigning class 'active' to the one that needs it -->
+        <button  type="button" class="search-type-btn <%= resulttype == undefined || resulttype == 'posts' ? 'active' : '' %>">posts</button>
+        <button  type="button" class="search-type-btn <%= resulttype == 'topics' ? 'active' : '' %>">topics</button>
+        <button  type="button" class="search-type-btn <%= resulttype == 'users' ? 'active' : '' %>">users</button>
+      
+
+        <% if(query.posts[0] == undefined && query.users[0] == undefined && query.topics[0] == undefined) {%>
+          <div class="subheading">No <%= resulttype %> to show for "<%= searched %>"</div>
+        <% }else{ %>
+            <div class="subheading"><%= resulttype %> for "<%= searched %>"</div>
+        <% } %>
+
+        <!-- each possible type of result is displayed below. since only one array may be greater than 0, only one type will be displayed -->
+        <% for (let i = 0; i < query.posts.length; i++) { %>
+          <div class="post">
+            <div class="post-metadata">
+              <span class="metadata-username">
+                <a class="img-link" href="/users/<%= query.posts[i].username %>">
+                  <img src="/images/profile_icon.webp">
+                  <%= query.posts[i].username %>
+                </a>
+              </span>
+              <a class="metadata-topic" href="/topics/<%= query.posts[i].topic_name %>">
+                &lt;<%= query.posts[i].topic_name %>&gt;
+              </a>
+              <span class="metadata-date">
+                <%= calculateDaysAgo(query.posts[i].timestamp) %> • <%= new Date(query.posts[i].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(query.posts[i].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
+              </span>
+            </div>
+            <form method="get" action="/posts/<%= query.posts[i].id %>" class="post-data">
+              <button type="submit">
+                <%- query.posts[i].context %>
+              </button>
+            </form>
+          </div>
+        <% } %>
+
+        <% if (query.topics.length > 0) { %>
+          <div class="topics">
+              <h2>Other users:</h2>
+          <% for (let i = 0; i < query.topics.length; i++) { %>
+              <a class="topic" href="/topics/<%= query.topics[i].topic_name %>">
+                <%= query.topics[i].topic_name %>
+              </a>
+          <% } %>
+          </div>
+        <% } %>
+
+        <% if (query.users.length > 0) { %>
+          <div class="topics">
+              <h2>Other users:</h2>
+          <% for (let i = 0; i < query.users.length; i++) { %>
+              <a class="topic" href="/users/<%= query.users[i].username %>">
+                <%= query.users[i].username %>
+              </a>
+          <% } %>
+          </div>
+        <% } %>
+      </div>
+
+      <div id="sidebar">
+        <form action=""></form>
+        <a class="page-link" href="/"><img src="/images/home_icon.png" alt="">Home</a>
+        <a class="page-link" href="/topics"><img src="/images/topics_icon.png" alt="">View Topics</a>
+        <a class="page-link" href="/users"><img src="/images/users_icon.png" alt="">View Users</a>
+        <a class="page-link" href="/about"><img src="/images/about_icon.png" alt="">About</a>
+
+        <% if (topicNamesList && topicNamesList.length > 0) { %>
+          <div class="followed-topics">
+            <h2>Followed:</h2>
+            <% for (let i = 0; i < topicNamesList.length; i++) { %>
+              <a class="followed-topic" href="/topics/<%= topicNamesList[i] %>">&lt;<%= topicNamesList[i]%>&gt;</a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+
+    </section>
   </body>
+
+  <script>
+    //attaches event listeners to the 3 buttons 
+    document.addEventListener('DOMContentLoaded', function () {
+      let searchBtns = document.querySelectorAll(".search-type-btn");
+      for(let btn of searchBtns){
+        let type = btn.innerText
+        btn.addEventListener("click", function(){
+          //changes type of resulttype before submitting
+          document.getElementById("searchType").value = type;
+          document.getElementById("searchForm").submit();
+        })
+      }
+    });
+  </script>
+  <script src="/client.js"></script>
+  <%
+    function calculateDaysAgo(timestamp) {
+      const postDate = new Date(timestamp);
+      const currentDate = new Date();
+      const timeDifference = currentDate - postDate;
+      const secondsAgo = Math.floor(timeDifference / 1000);
+      const minutesAgo = Math.floor(secondsAgo / 60);
+      const hoursAgo = Math.floor(minutesAgo / 60);
+      const daysAgo = Math.floor(hoursAgo / 24);
+
+      if (daysAgo > 1) {
+        return `Posted ${daysAgo} days ago`;
+      } else if (daysAgo === 1) {
+        return 'Posted yesterday';
+      } else if (hoursAgo >= 1) {
+        return `Posted ${hoursAgo} ${hoursAgo === 1 ? 'hour' : 'hours'} ago`;
+      } else if (minutesAgo >= 1) {
+        return `Posted ${minutesAgo} ${minutesAgo === 1 ? 'minute' : 'minutes'} ago`;
+      } else {
+        return `Posted less than a minute ago`;
+      }
+    }
+  %>
 </html>

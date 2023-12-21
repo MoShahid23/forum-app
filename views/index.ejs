@@ -1,44 +1,43 @@
 <!doctype html>
+<!-- This serves as the homepage -->
+<!-- general layout is consitent on every page except login/register -->
+<!-- so this is the ejs with the most comments, others are only when something important changes -->
 <html>
   <head>
-    <title>Welcome to <%=appName%></title>
+    <title>Homepage - <%=appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
-    <%
-      function calculateDaysAgo(timestamp) {
-        const postDate = new Date(timestamp);
-        const currentDate = new Date();
-        const timeDifference = currentDate - postDate;
-        const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        if(daysAgo == 0){
-          return "Posted today"
-        }else if(daysAgo == 1){
-          return "Posted yesterday"
-        }
-        return "Posted "+daysAgo+" days ago";
-      }
-    %>
 
+    <!-- header display logo/home link, searchbar, user dropdown -->
     <header>
       <h1><a href="/"><%=appName%></a></h1>
 
-      <form id="searchForm" method="POST" action="/search">
-        <input type="text" id="searchInput" name="search-text" placeholder="Explore topics, posts and users...">
+      <!-- resulttype is hidden and manipulated through script when needed. by default its value remain as posts -->
+      <form id="searchForm" method="GET" action="/search">
+        <input type="text" id="searchInput" name="query" placeholder="Explore topics, posts and users...">
+        <input type="text" name="resulttype" id="searchType" value="posts" hidden>
         <button type="submit" id="searchButton"><img src="/images/search_icon.webp"></button>
       </form>
 
       <div class="dropdown">
-        <button class="dropbtn">▼&nbsp; <%=sessionData.username%></button>
+        <!-- access users username from sessionData -->
+        <button class="dropbtn">▼&nbsp; <%=sessionData.username%></button> 
         <div class="dropdown-content">
           <a class="img-link" href="/profile"><img src="/images/profile_icon.webp">View Profile</a>
           <a class="img-link" href="/logout"><img src="/images/logout_icon.png">Log Out</a>
         </div>
       </div>
     </header>
+
+    <!-- section contains 3 containers, spacer, main and sidebar. sidebar content is the same in every page with a sidebar -->
     <section>
+      <!-- exists to make space between header and other content. header is fixed so must have this -->
       <div id="spacer"></div>
+      <!-- the place to display th emain content that user wants to view -->
       <div id="main">
+
+        <!-- little create post area. heavily inspired from other forum pages but is intuitive way to create posts ig -->
         <div class="create-post">
           <a href="/create/">
             <select name="topic">
@@ -51,28 +50,35 @@
           </a>
         </div>
 
+        <!-- displays a heading based on weather any posts are listed -->
         <% if(results.length == 0) {%>
           <div class="subheading">No posts to show! <a href="/topics">Follow topics here...</a></div>
         <% }else{ %>
             <div class="subheading">Latest updates from your followed topics:</div>
         <% } %>
 
+        <!-- loops over all posts returned from route -->
         <% for (let i = 0; i < results.length; i++) { %>
+          <!-- each post is inside of its own div -->
           <div class="post">
             <div class="post-metadata">
               <span class="metadata-username">
                 <a class="img-link" href="/users/<%= results[i].username %>">
                   <img src="/images/profile_icon.webp">
+                  <!-- clickable username -->
                   <%= results[i].username %>
                 </a>
               </span>
               <a class="metadata-topic" href="/topics/<%= results[i].topic_name %>">
+                <!-- clickable topic name -->
                 &lt;<%= results[i].topic_name %>&gt;
               </a>
               <span class="metadata-date">
+                <!-- post timestamp is converted into a more readable format with a fucntion defined at the bottom of all templates that require it -->
                 <%= calculateDaysAgo(results[i].timestamp) %> • <%= new Date(results[i].timestamp).toLocaleString('en-GB', {dateStyle: 'short'}) %>  at <%= new Date(results[i].timestamp).toLocaleString('en-GB', { timeStyle: 'short' }) %>
               </span>
             </div>
+            <!-- used a form here to allow links within the post-data container. using an anchor wlead to weird issues. this is clickable and links to the post -->
             <form method="get" action="/posts/<%= results[i].id %>" class="post-data">
               <button type="submit">
                 <%- results[i].context %>
@@ -83,14 +89,17 @@
       </div>
 
       <div id="sidebar">
+        <!-- manually added/removed class 'active' when was needed -->
         <a class="page-link active" href="/"><img src="/images/home_icon.png" alt="">Home</a>
         <a class="page-link" href="/topics"><img src="/images/topics_icon.png" alt="">View Topics</a>
         <a class="page-link" href="/users"><img src="/images/users_icon.png" alt="">View Users</a>
         <a class="page-link" href="/about"><img src="/images/about_icon.png" alt="">About</a>
 
+        <!-- displays topic names if noty empty, does nothing if it is empty -->
         <% if (topicNamesList && topicNamesList.length > 0) { %>
           <div class="followed-topics">
             <h2>Followed:</h2>
+            <!-- each topic is clcikable. -->
             <% for (let i = 0; i < topicNamesList.length; i++) { %>
               <a class="followed-topic" href="/topics/<%= topicNamesList[i] %>">&lt;<%= topicNamesList[i]%>&gt;</a>
             <% } %>
@@ -101,4 +110,31 @@
   </body>
 
   <script src="/client.js"></script>
+  <%
+    function calculateDaysAgo(timestamp) {
+      //creates date object with given timestamp
+      const postDate = new Date(timestamp);
+      const currentDate = new Date(); //one with current timestamp
+      const timeDifference = currentDate - postDate;
+
+      //calculates time difference in more readable units
+      const secondsAgo = Math.floor(timeDifference / 1000);
+      const minutesAgo = Math.floor(secondsAgo / 60);
+      const hoursAgo = Math.floor(minutesAgo / 60);
+      const daysAgo = Math.floor(hoursAgo / 24);
+
+      //choosing what to display when.
+      if (daysAgo > 1) {
+        return `Posted ${daysAgo} days ago`;
+      } else if (daysAgo === 1) {
+        return 'Posted yesterday';
+      } else if (hoursAgo >= 1) {
+        return `Posted ${hoursAgo} ${hoursAgo === 1 ? 'hour' : 'hours'} ago`;
+      } else if (minutesAgo >= 1) {
+        return `Posted ${minutesAgo} ${minutesAgo === 1 ? 'minute' : 'minutes'} ago`;
+      } else {
+        return `Posted less than a minute ago`;
+      }
+    }
+  %>
 </html>
