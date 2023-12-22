@@ -1,4 +1,4 @@
-# forum-app Readme
+# forum-app
 
 This repository contains a simple forum application built with Node.js, Express, and MySQL. Follow the steps below to set up and run the application.
 
