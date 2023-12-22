@@ -1010,7 +1010,6 @@ module.exports = function(app, renderData) {
                 }
                 let newData = Object.assign({}, renderData, { sessionData: req.session, query:{posts, topics, users}});
                 renderPage(newData);
-                console.log(posts)
             });
         }
     });
